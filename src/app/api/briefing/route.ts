@@ -1,5 +1,6 @@
 import { tasks, runs } from "@trigger.dev/sdk";
 import type { ingestBriefing } from "@/trigger/ingest-briefing";
+import { auth } from "@/lib/auth/server";
 
 export const maxDuration = 60;
 
@@ -14,6 +15,11 @@ const TERMINAL_STATUSES = new Set([
 ]);
 
 export async function POST(request: Request) {
+  const { data: session } = await auth.getSession();
+  if (!session?.user) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const body = await request.json().catch(() => null);
   const ticker = typeof body?.ticker === "string" ? body.ticker.trim() : "";
 
