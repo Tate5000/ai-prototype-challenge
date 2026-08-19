@@ -1,6 +1,6 @@
 import { task, logger } from "@trigger.dev/sdk";
 import { runBriefingAgent } from "@/lib/agent/run";
-import { db } from "@/lib/db";
+import { getDb } from "@/lib/db";
 import { briefings } from "@/lib/db/schema";
 
 export const ingestBriefing = task({
@@ -12,7 +12,7 @@ export const ingestBriefing = task({
 
     const result = await runBriefingAgent(ticker);
 
-    const [row] = await db
+    const [row] = await getDb()
       .insert(briefings)
       .values({
         ticker,
