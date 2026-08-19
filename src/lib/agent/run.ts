@@ -44,7 +44,7 @@ Respond with markdown in exactly this structure:
  * AI_GATEWAY_API_KEY). Falls back to calling Anthropic directly when only ANTHROPIC_API_KEY is
  * set — useful before a Vercel project/Gateway key exists.
  */
-function briefingModel() {
+export function briefingModel() {
   if (process.env.AI_GATEWAY_API_KEY) {
     const modelId = process.env.AI_GATEWAY_MODEL ?? "anthropic/claude-sonnet-4.5";
     return gateway(modelId);

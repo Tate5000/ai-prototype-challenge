@@ -22,3 +22,15 @@ export const briefings = pgTable("briefings", {
 
 export type Briefing = typeof briefings.$inferSelect;
 export type NewBriefing = typeof briefings.$inferInsert;
+
+export const auditLogs = pgTable("audit_logs", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: text("user_id").notNull(),
+  userEmail: text("user_email"),
+  action: text("action").notNull(),
+  detail: jsonb("detail"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export type AuditLog = typeof auditLogs.$inferSelect;
+export type NewAuditLog = typeof auditLogs.$inferInsert;
