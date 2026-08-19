@@ -17,7 +17,7 @@ Next.js Route Handler (Vercel)
 Trigger.dev task: ingest-briefing
    │  runs the research agent, then writes the result to Postgres
    ▼
-Research Agent (Vercel AI SDK, Claude Sonnet 4.5 via Portkey gateway)
+Research Agent (Vercel AI SDK, Claude Sonnet 4.5 via Vercel AI Gateway)
    │  tool-calling loop, decides for itself which tools to call and when to stop
    ├─ getQuote        → Yahoo Finance (fallback: Stooq), no key required
    ├─ searchFilings    → SEC EDGAR submissions API, no key required
@@ -38,8 +38,10 @@ to stop and write the briefing. The tool-call log is persisted so the reasoning 
 - **Frontend**: Next.js 16 (App Router, TypeScript, Tailwind) — deployed on Vercel
 - **Ingestion / orchestration runtime**: Trigger.dev — runs the agent as a durable background task
 - **Database**: Neon (serverless Postgres) via Drizzle ORM
-- **Model**: Claude Sonnet 4.5 via the Perficient Portkey gateway (OpenAI-compatible endpoint),
-  called through the Vercel AI SDK
+- **Model**: Claude Sonnet 4.5 via [Vercel AI Gateway](https://vercel.com/docs/ai-gateway), called
+  through the Vercel AI SDK. On Vercel, this authenticates automatically via OIDC — no key
+  needed. Locally it falls back to a direct Anthropic API call if `ANTHROPIC_API_KEY` is set
+  and `AI_GATEWAY_API_KEY` isn't (see `src/lib/agent/run.ts`).
 - **Data sources**: SEC EDGAR (public, no key) for filings; Yahoo Finance / Stooq (public, no
   key) for quotes
 
@@ -57,12 +59,13 @@ Required environment variables (see `.env.example`):
 
 | Variable | Where it comes from |
 |---|---|
-| `PORTKEY_API_URL`, `PORTKEY_API_KEY`, `PORTKEY_MODEL` | Provided at interview start |
+| `AI_GATEWAY_API_KEY` (local only) or `ANTHROPIC_API_KEY` (fallback) | Vercel AI Gateway dashboard, or an Anthropic key for local testing before a Vercel project exists |
 | `DATABASE_URL` | Neon project connection string |
-| `TRIGGER_PROJECT_ID`, `TRIGGER_SECRET_KEY` | Trigger.dev project settings |
+| `TRIGGER_SECRET_KEY` | Trigger.dev project settings (project ref is set in `trigger.config.ts`) |
 
-For production, set the same variables in the Vercel project and connect the Trigger.dev
-project to the same Vercel deployment (or run `npx trigger.dev@latest deploy`).
+For production, set `DATABASE_URL` and `TRIGGER_SECRET_KEY` in the Vercel project. Once deployed
+on Vercel, AI Gateway auth is automatic (OIDC) — no `AI_GATEWAY_API_KEY` needed. Connect the
+Trigger.dev project to the same Vercel deployment (or run `npx trigger.dev@latest deploy`).
 
 ## Notes / tradeoffs
 

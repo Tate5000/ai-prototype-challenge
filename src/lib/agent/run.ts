@@ -1,5 +1,5 @@
-import { createOpenAI } from "@ai-sdk/openai";
-import { generateText, stepCountIs } from "ai";
+import { createAnthropic } from "@ai-sdk/anthropic";
+import { gateway, generateText, stepCountIs } from "ai";
 import { briefingTools } from "./tools";
 import type { Quote } from "@/lib/sources/quote";
 import type { FilingMeta } from "@/lib/sources/sec";
@@ -19,6 +19,9 @@ briefing an advisor can skim in under a minute. Be factual and only use informat
 the tool results — if something isn't covered, say so briefly rather than guessing. Do not give
 investment advice or price targets.
 
+Your final reply must contain ONLY the briefing markdown — no preamble, no commentary about
+what you're about to do, no closing remarks. Start directly with the first heading below.
+
 Respond with markdown in exactly this structure:
 
 ## Business Overview
@@ -36,14 +39,21 @@ Respond with markdown in exactly this structure:
 ## Talking Points for Client Conversation
 2-3 bullets an advisor could use to frame a conversation with a client about this stock.`;
 
-function portkeyModel() {
-  const openai = createOpenAI({
-    baseURL: process.env.PORTKEY_API_URL,
-    apiKey: process.env.PORTKEY_API_KEY,
-  });
-  const modelId =
-    process.env.PORTKEY_MODEL ?? "@aws-bedrock-use2/us.anthropic.claude-sonnet-4-5-20250929-v1:0";
-  return openai.chat(modelId);
+/**
+ * Primary path is Vercel AI Gateway (works automatically on Vercel via OIDC, or locally with
+ * AI_GATEWAY_API_KEY). Falls back to calling Anthropic directly when only ANTHROPIC_API_KEY is
+ * set — useful before a Vercel project/Gateway key exists.
+ */
+function briefingModel() {
+  if (process.env.AI_GATEWAY_API_KEY) {
+    const modelId = process.env.AI_GATEWAY_MODEL ?? "anthropic/claude-sonnet-4.5";
+    return gateway(modelId);
+  }
+  if (process.env.ANTHROPIC_API_KEY) {
+    const anthropic = createAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+    return anthropic(process.env.ANTHROPIC_MODEL ?? "claude-sonnet-4-5");
+  }
+  return gateway(process.env.AI_GATEWAY_MODEL ?? "anthropic/claude-sonnet-4.5");
 }
 
 export interface BriefingRunResult {
@@ -56,12 +66,15 @@ export interface BriefingRunResult {
 
 export async function runBriefingAgent(ticker: string): Promise<BriefingRunResult> {
   const result = await generateText({
-    model: portkeyModel(),
+    model: briefingModel(),
     system: SYSTEM_PROMPT,
     prompt: `Prepare an advisor briefing for ticker ${ticker.toUpperCase()}.`,
     tools: briefingTools,
     stopWhen: stepCountIs(8),
   });
+
+  const headingIndex = result.text.indexOf("## Business Overview");
+  const briefingMarkdown = headingIndex >= 0 ? result.text.slice(headingIndex) : result.text;
 
   const toolCallLog = result.toolResults.map((r) => ({
     tool: r.toolName,
@@ -85,7 +98,7 @@ export async function runBriefingAgent(ticker: string): Promise<BriefingRunResul
   }
 
   return {
-    briefingMarkdown: result.text,
+    briefingMarkdown,
     companyName,
     quote,
     filing,
