@@ -1,5 +1,8 @@
 # Advisor Stock Briefing
 
+**Live app:** [ai-prototype-challenge.vercel.app](https://ai-prototype-challenge.vercel.app)
+— sign in with your email (magic link, no password) to use it.
+
 AI Prototype Challenge — Finance scenario. A wealth advisor chats with an AI research assistant
 that looks up live quotes and reads SEC filings on demand, so they can prep for client calls in
 minutes instead of hours. A secondary one-shot form (ticker in, persisted briefing out) is also
