@@ -1,0 +1,278 @@
+<title>Advisor Stock Briefing — Pitch Slide</title>
+<style>
+  :root {
+    --ink: #0e1a2b;
+    --ink-soft: #17273d;
+    --paper: #f3efe6;
+    --paper-dim: #d9d2c1;
+    --line: rgba(243, 239, 230, 0.16);
+    --gold: #c9973f;
+    --gold-soft: #e4c489;
+    --good: #4f8f6d;
+  }
+  :root[data-theme="light"] {
+    --surface: #ffffff;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    height: 100%;
+    background: #05090f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden;
+  }
+
+  body {
+    font-family: -apple-system, "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+    padding: 2.5vw;
+  }
+
+  .slide {
+    width: min(100%, 1400px);
+    aspect-ratio: 16 / 9;
+    background: var(--ink);
+    background-image:
+      radial-gradient(ellipse 900px 500px at 82% -10%, rgba(201, 151, 63, 0.14), transparent 60%),
+      radial-gradient(ellipse 700px 500px at -5% 110%, rgba(79, 143, 109, 0.10), transparent 55%);
+    color: var(--paper);
+    border-radius: 14px;
+    box-shadow: 0 40px 90px -30px rgba(0, 0, 0, 0.7);
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
+    padding: 3.6% 4.2%;
+    gap: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .eyebrow {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: clamp(10px, 1.05vw, 13px);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold-soft);
+    opacity: 0.9;
+  }
+  .eyebrow span:last-child { color: var(--paper-dim); }
+
+  h1 {
+    font-family: Georgia, "Iowan Old Style", "Palatino Linotype", "Times New Roman", serif;
+    font-weight: 400;
+    font-size: clamp(28px, 3.6vw, 50px);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+    margin: 0.5% 0 0;
+    max-width: 15ch;
+  }
+  h1 em {
+    font-style: normal;
+    color: var(--gold-soft);
+  }
+
+  .thesis {
+    grid-row: 3;
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 3.2%;
+    align-items: center;
+    padding-top: 1.4%;
+  }
+
+  .thesis-copy p {
+    font-size: clamp(13px, 1.5vw, 17px);
+    line-height: 1.55;
+    color: var(--paper-dim);
+    max-width: 46ch;
+    margin: 0 0 3.4%;
+  }
+
+  .cols {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(10px, 1.4vw, 20px);
+  }
+
+  .col {
+    border-top: 1px solid var(--line);
+    padding-top: clamp(8px, 1.1vw, 14px);
+  }
+  .col .tag {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: clamp(9px, 0.85vw, 11px);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--good);
+  }
+  .col h3 {
+    font-size: clamp(12.5px, 1.35vw, 15px);
+    font-weight: 600;
+    margin: 0.5em 0 0.4em;
+    color: var(--paper);
+  }
+  .col p {
+    font-size: clamp(11px, 1.15vw, 13px);
+    line-height: 1.5;
+    color: var(--paper-dim);
+    margin: 0;
+  }
+
+  .stat-panel {
+    background: rgba(243, 239, 230, 0.05);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: clamp(14px, 2vw, 26px) clamp(16px, 2.2vw, 28px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: clamp(6px, 1vw, 10px);
+  }
+  .stat-row {
+    display: flex;
+    align-items: baseline;
+    gap: clamp(8px, 1.2vw, 14px);
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat-row .from {
+    font-size: clamp(15px, 1.7vw, 20px);
+    color: var(--paper-dim);
+    text-decoration: line-through;
+    text-decoration-color: rgba(243, 239, 230, 0.3);
+  }
+  .stat-row .arrow { color: var(--paper-dim); font-size: clamp(13px, 1.4vw, 16px); }
+  .stat-row .to {
+    font-size: clamp(28px, 3.4vw, 42px);
+    color: var(--gold-soft);
+    font-weight: 600;
+  }
+  .stat-label {
+    font-size: clamp(10px, 1vw, 12px);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--paper-dim);
+  }
+  .ticker-demo {
+    margin-top: clamp(6px, 1vw, 10px);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: clamp(10.5px, 1.1vw, 12.5px);
+    color: var(--good);
+  }
+  .ticker-demo .dot {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--good);
+    box-shadow: 0 0 0 3px rgba(79, 143, 109, 0.18);
+  }
+
+  .footer {
+    grid-row: 4;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--line);
+    padding-top: clamp(10px, 1.5vw, 16px);
+    margin-top: clamp(10px, 1.6vw, 18px);
+  }
+
+  .stack {
+    display: flex;
+    align-items: center;
+    gap: clamp(6px, 0.9vw, 10px);
+    flex-wrap: wrap;
+  }
+  .chip {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: clamp(9px, 0.82vw, 10.5px);
+    color: var(--paper-dim);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.45em 0.9em;
+    white-space: nowrap;
+  }
+  .stack-sep { color: rgba(243, 239, 230, 0.25); font-size: 11px; }
+
+  .footer-note {
+    font-size: clamp(10px, 1vw, 12px);
+    color: var(--paper-dim);
+    text-align: right;
+    max-width: 30ch;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 760px) {
+    .thesis { grid-template-columns: 1fr; }
+    .cols { grid-template-columns: 1fr; }
+    .footer { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .footer-note { text-align: left; }
+  }
+</style>
+
+<div class="slide">
+  <div class="eyebrow">
+    <span>AI Prototype Challenge · Finance</span>
+    <span>Perficient AI Solutions</span>
+  </div>
+
+  <h1>Advisor Stock Briefing — <em>research an advisor can trust, in 60 seconds</em></h1>
+
+  <div class="thesis">
+    <div class="thesis-copy">
+      <p>
+        Before every client call, advisors lose 20–30 minutes pulling a quote and skimming a
+        dense 10-K or 10-Q. That doesn't scale across a book of hundreds of names — and it's
+        time not spent with the client.
+      </p>
+      <div class="cols">
+        <div class="col">
+          <div class="tag">Problem</div>
+          <h3>Manual, per-ticker research</h3>
+          <p>Quote here, filing there, 20+ minutes of reading before you're ready to talk.</p>
+        </div>
+        <div class="col">
+          <div class="tag">Solution</div>
+          <h3>An agent that reads the filing for you</h3>
+          <p>Type a ticker. The agent decides what to check — quote, then the right SEC filing — and writes the briefing.</p>
+        </div>
+        <div class="col">
+          <div class="tag">Trust</div>
+          <h3>Grounded, not guessed</h3>
+          <p>Every line traces to a real EDGAR filing. Tool calls are logged — advisors and compliance can see what it read.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-panel">
+      <div class="stat-row">
+        <span class="from">20–30 min</span>
+        <span class="arrow">→</span>
+        <span class="to">&lt;60 sec</span>
+      </div>
+      <div class="stat-label">Per-ticker prep time, one agent run</div>
+      <div class="ticker-demo"><span class="dot"></span> AAPL · quote fetched · 10-Q read · briefing ready</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="stack">
+      <span class="chip">Next.js / Vercel</span>
+      <span class="stack-sep">→</span>
+      <span class="chip">Trigger.dev agent run</span>
+      <span class="stack-sep">→</span>
+      <span class="chip">Claude Sonnet 4.5 via Portkey</span>
+      <span class="stack-sep">→</span>
+      <span class="chip">EDGAR + market data</span>
+      <span class="stack-sep">→</span>
+      <span class="chip">Neon Postgres</span>
+    </div>
+    <div class="footer-note">Built to extend: earnings-call transcripts, analyst notes, portfolio-level batch briefings — same agent, more sources.</div>
+  </div>
+</div>
