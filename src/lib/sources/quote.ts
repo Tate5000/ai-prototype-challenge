@@ -9,6 +9,7 @@ export interface Quote {
   dayLow: number | null;
   volume: number | null;
   source: string;
+  sourceUrl: string;
 }
 
 const HEADERS = { "User-Agent": "Mozilla/5.0 (advisor-briefing-tool)" };
@@ -44,6 +45,7 @@ async function getQuoteYahoo(ticker: string): Promise<Quote | null> {
       dayLow: meta.regularMarketDayLow ?? null,
       volume: meta.regularMarketVolume ?? null,
       source: "Yahoo Finance",
+      sourceUrl: `https://finance.yahoo.com/quote/${encodeURIComponent(meta.symbol ?? ticker.toUpperCase())}`,
     };
   } catch {
     return null;
@@ -79,6 +81,7 @@ async function getQuoteStooq(ticker: string): Promise<Quote | null> {
       dayLow: row["Low"] && row["Low"] !== "N/D" ? parseFloat(row["Low"]) : null,
       volume: row["Volume"] && row["Volume"] !== "N/D" ? parseInt(row["Volume"], 10) : null,
       source: "Stooq",
+      sourceUrl: `https://stooq.com/q/?s=${encodeURIComponent(ticker.toLowerCase())}.us`,
     };
   } catch {
     return null;

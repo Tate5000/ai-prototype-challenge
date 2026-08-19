@@ -263,7 +263,8 @@ function collectSources(message: UIMessage): Source[] {
       const key = `quote:${o.source}`;
       if (!seen.has(key)) {
         seen.add(key);
-        sources.push({ label: `${o.source} (live quote)` });
+        const href = typeof o.sourceUrl === "string" ? o.sourceUrl : undefined;
+        sources.push({ label: `${o.source} (live quote)`, href });
       }
     }
     if (name === "searchFilings" && o.filing) {
