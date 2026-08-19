@@ -26,10 +26,10 @@ Next.js Route Handler (Vercel)
 Neon (serverless Postgres) — `audit_logs` table, via Drizzle ORM
 ```
 
-A secondary path (`/api/briefing`) triggers the same tool-calling agent as a durable
-Trigger.dev background task (`src/trigger/ingest-briefing.ts`), which writes a persisted,
-structured record to the `briefings` table instead of streaming to the browser — useful for a
-saved/shareable briefing rather than a live conversation.
+A secondary path (`/api/briefing`, also gated behind a signed-in session) triggers the same
+tool-calling agent as a durable Trigger.dev background task (`src/trigger/ingest-briefing.ts`),
+which writes a persisted, structured record to the `briefings` table instead of streaming to
+the browser — useful for a saved/shareable briefing rather than a live conversation.
 
 Research Agent: Vercel AI SDK, Claude Sonnet 4.5 via Vercel AI Gateway. It's given all three
 tools and a system prompt describing the goal, and decides for itself which tools to call, in
